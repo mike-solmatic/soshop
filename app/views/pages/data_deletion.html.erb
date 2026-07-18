@@ -1,0 +1,39 @@
+<% content_for :title, "Data Deletion — SoShop" %>
+
+<nav class="public-nav">
+  <%= link_to root_path, class: "brand" do %>
+    <span class="brand-mark">S</span> SoShop
+  <% end %>
+</nav>
+
+<main class="content" style="max-width: 760px">
+  <div class="card">
+    <div class="card-body" style="padding: 2rem">
+      <h1>Data Deletion Instructions</h1>
+      <p>
+        If you created a customer account on a SoShop store using Facebook
+        Login and want your data removed, you can request deletion at any
+        time.
+      </p>
+
+      <h2>How to request deletion</h2>
+      <p>
+        Email <a href="mailto:privacy@elitelouise.com">privacy@elitelouise.com</a>
+        from the email address associated with your account, or include the
+        name of the shop you signed in to. We will delete your customer
+        profile — including your Facebook ID, name, email and profile picture
+        — along with your saved addresses within 30 days, and confirm by
+        reply.
+      </p>
+      <p class="mb-0 text-muted text-sm">
+        Note: records a seller is legally required to keep (e.g. issued
+        invoices for completed purchases) may be retained in anonymized form
+        where required by law.
+      </p>
+    </div>
+  </div>
+</main>
+
+<div class="footer">
+  <%= link_to "Home", root_path %> · <%= link_to "Privacy policy", privacy_path %>
+</div>

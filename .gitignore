@@ -30,3 +30,7 @@
 /.env.*
 !/.env.example
 .claude/settings.local.json
+
+# Deploy SSH keypair (never commit)
+/soshop_deploy
+/soshop_deploy.pub

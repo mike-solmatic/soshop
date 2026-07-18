@@ -1,18 +1,14 @@
 # Kamal deployment configuration for elitelouise.com
 #
-# Two placeholders to fill in after the AWS/GitHub checklist:
-#   1. YOUR_GITHUB_USERNAME  — your GitHub username (lowercase), 2 places
-#   2. YOUR_SERVER_IP        — the EC2 Elastic IP
-#
 # Deploys run automatically from GitHub Actions (.github/workflows/deploy.yml),
 # or manually with: bin/kamal deploy
 
 service: soshop
-image: YOUR_GITHUB_USERNAME/soshop
+image: mike-solmatic/soshop
 
 servers:
   web:
-    - YOUR_SERVER_IP
+    - 52.77.195.94
 
 # kamal-proxy terminates TLS with automatic Let's Encrypt certificates.
 proxy:
@@ -28,7 +24,7 @@ proxy:
 # KAMAL_REGISTRY_PASSWORD is a GitHub PAT with read:packages + write:packages.
 registry:
   server: ghcr.io
-  username: YOUR_GITHUB_USERNAME
+  username: mike-solmatic
   password:
     - KAMAL_REGISTRY_PASSWORD
 

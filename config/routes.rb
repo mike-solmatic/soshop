@@ -22,6 +22,10 @@ Rails.application.routes.draw do
   # Public storefront per seller — entry point for customer Facebook login
   get "s/:slug", to: "storefronts#show", as: :storefront
 
+  # Legal pages (required by Facebook for Live apps)
+  get "privacy", to: "pages#privacy", as: :privacy
+  get "data-deletion", to: "pages#data_deletion", as: :data_deletion
+
   namespace :portal do
     get "dashboard", to: "dashboard#show"
     resources :orders, only: [ :index, :show ]
