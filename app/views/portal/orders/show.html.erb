@@ -1,0 +1,65 @@
+<% content_for :title, "#{@order.number} — My orders" %>
+
+<div class="page-head">
+  <div>
+    <h1><%= @order.number %> <%= order_status_badge(@order) %></h1>
+    <div class="sub">Placed <%= @order.placed_at.strftime("%B %-d, %Y") %></div>
+  </div>
+  <%= link_to "← My orders", portal_orders_path, class: "btn btn-outline" %>
+</div>
+
+<div class="two-col">
+  <div class="card mt-0">
+    <div class="card-head"><h3>Items</h3></div>
+    <div class="card-body flush table-wrap">
+      <table class="nice">
+        <thead>
+          <tr><th>Product</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Total</th></tr>
+        </thead>
+        <tbody>
+          <% @order.order_items.each do |item| %>
+            <tr>
+              <td><%= item.product_name %></td>
+              <td class="num"><%= item.quantity %></td>
+              <td class="num"><%= money(item.unit_price_cents) %></td>
+              <td class="num"><%= money(item.line_total_cents) %></td>
+            </tr>
+          <% end %>
+          <tr><td colspan="3" class="num text-muted">Subtotal</td><td class="num"><%= money(@order.subtotal_cents) %></td></tr>
+          <tr><td colspan="3" class="num text-muted">Shipping</td><td class="num"><%= money(@order.shipping_cents) %></td></tr>
+          <tr><td colspan="3" class="num"><strong>Total</strong></td><td class="num"><strong><%= money(@order.total_cents) %></strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <div class="card mt-0">
+      <div class="card-head"><h3>Delivery</h3></div>
+      <div class="card-body">
+        <% if @order.shipping_address %>
+          <strong><%= @order.shipping_address.recipient %></strong><br>
+          <span class="text-sm"><%= @order.shipping_address %></span>
+        <% else %>
+          <p class="text-muted mb-0">No shipping address on this order.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Payment</h3></div>
+      <div class="card-body">
+        <% if @payments.any? %>
+          <% @payments.each do |payment| %>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem">
+              <span class="text-sm"><%= payment.method.humanize %></span>
+              <span><%= payment_status_badge(payment) %> <strong><%= money(payment.amount_cents) %></strong></span>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted mb-0">No payments yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

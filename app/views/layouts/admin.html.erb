@@ -1,0 +1,20 @@
+<% content_for :sidebar do %>
+  <span class="area-chip">ADMIN</span>
+  <div class="sidebar-section">Platform</div>
+  <%= side_link "Dashboard", admin_dashboard_path, :dashboard, active: current_page?(admin_dashboard_path) %>
+  <%= side_link "Sellers", admin_sellers_path, :sellers, active: request.path.start_with?("/admin/sellers") %>
+  <div class="spacer"></div>
+<% end %>
+
+<% content_for :topbar do %>
+  <div class="topbar">
+    <strong>Platform administration</strong>
+    <div class="who">
+      <%= avatar_tag(current_admin.name, nil) %>
+      <span><%= current_admin.name %></span>
+      <%= button_to "Sign out", destroy_admin_session_path, method: :delete, class: "btn btn-outline btn-sm" %>
+    </div>
+  </div>
+<% end %>
+
+<%= render template: "layouts/application" %>

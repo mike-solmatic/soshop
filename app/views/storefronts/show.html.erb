@@ -1,0 +1,49 @@
+<% content_for :title, @seller.store_name %>
+
+<nav class="public-nav">
+  <%= link_to root_path, class: "brand" do %>
+    <span class="brand-mark">S</span> SoShop
+  <% end %>
+  <div class="links">
+    <% if customer_signed_in? && current_customer.seller_id == @seller.id %>
+      <%= link_to "My account", portal_dashboard_path, class: "btn btn-outline" %>
+    <% else %>
+      <%= button_to customer_facebook_omniauth_authorize_path(seller_slug: @seller.slug),
+            method: :post, data: { turbo: false }, class: "btn btn-facebook" do %>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+        Continue with Facebook
+      <% end %>
+    <% end %>
+  </div>
+</nav>
+
+<div class="store-hero">
+  <h1><%= @seller.store_name %></h1>
+  <p>Handpicked bags, shipped with love. Sign in with Facebook to view your orders and manage delivery addresses.</p>
+  <% unless customer_signed_in? && current_customer.seller_id == @seller.id %>
+    <%= button_to customer_facebook_omniauth_authorize_path(seller_slug: @seller.slug),
+          method: :post, data: { turbo: false }, class: "btn btn-facebook" do %>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.89v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+      Continue with Facebook
+    <% end %>
+  <% end %>
+</div>
+
+<div class="product-grid">
+  <% emojis = %w[👜 🎒 👝 💼 🧳 👛] %>
+  <% @products.each_with_index do |product, i| %>
+    <div class="product-card">
+      <div class="product-thumb"><%= emojis[i % emojis.size] %></div>
+      <div class="info">
+        <div class="name"><%= product.name %></div>
+        <div class="cat"><%= product.category %></div>
+        <div class="price"><%= money(product.price_cents) %></div>
+      </div>
+    </div>
+  <% end %>
+  <% if @products.empty? %>
+    <div class="empty-state"><div class="big">👜</div>No products yet — check back soon!</div>
+  <% end %>
+</div>
+
+<div class="footer">Powered by SoShop</div>

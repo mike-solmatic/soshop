@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "SoShop — Sell bags online" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body>
+    <div class="flash-stack">
+      <% flash.each do |type, message| %>
+        <div class="flash <%= type == "alert" ? "alert" : "notice" %>"><%= message %></div>
+      <% end %>
+    </div>
+
+    <% if content_for?(:sidebar) %>
+      <div class="app-shell">
+        <aside class="sidebar">
+          <%= link_to root_path, class: "brand" do %>
+            <span class="brand-mark">S</span> SoShop
+          <% end %>
+          <%= yield :sidebar %>
+        </aside>
+        <div class="main">
+          <%= yield :topbar %>
+          <main class="content">
+            <%= yield %>
+          </main>
+        </div>
+      </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>

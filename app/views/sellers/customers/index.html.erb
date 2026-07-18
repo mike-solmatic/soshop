@@ -1,0 +1,36 @@
+<% content_for :title, "Customers — #{current_seller.store_name}" %>
+
+<div class="page-head">
+  <div>
+    <h1>Customers</h1>
+    <div class="sub">Everyone who signed in to your shop with Facebook</div>
+  </div>
+</div>
+
+<div class="card">
+  <%= react_component "DataTable", {
+    searchPlaceholder: "Search customers…",
+    emptyMessage: "No customers yet — share your storefront link!",
+    columns: [
+      { key: "name", label: "Customer", type: "avatar" },
+      { key: "email", label: "Email" },
+      { key: "orders", label: "Orders", align: "right" },
+      { key: "lifetime", label: "Lifetime value", type: "money", align: "right" },
+      { key: "joined", label: "Joined" }
+    ],
+    rows: @customers.map { |c|
+      {
+        id: c.id,
+        href: sellers_customer_path(c),
+        name: c.name,
+        avatar_url: c.avatar_url,
+        email: c.email,
+        orders: c.orders_count,
+        lifetime: money(c.lifetime_cents),
+        lifetime_sort: c.lifetime_cents,
+        joined: c.created_at.strftime("%b %-d, %Y"),
+        joined_sort: c.created_at.to_i
+      }
+    }
+  } %>
+</div>

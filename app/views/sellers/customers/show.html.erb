@@ -1,0 +1,59 @@
+<% content_for :title, "#{@customer.name} — Customers" %>
+
+<div class="page-head">
+  <div style="display:flex; align-items:center; gap: 0.9rem">
+    <%= avatar_tag(@customer.name, @customer.avatar_url, size: 48) %>
+    <div>
+      <h1 class="mb-0"><%= @customer.name %></h1>
+      <div class="sub">
+        Customer since <%= @customer.created_at.strftime("%B %Y") %> ·
+        Facebook ID <%= @customer.uid %>
+      </div>
+    </div>
+  </div>
+  <%= link_to "← All customers", sellers_customers_path, class: "btn btn-outline" %>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="label">Email</div>
+    <div class="value" style="font-size: 1.05rem"><%= @customer.email.presence || "—" %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Orders</div>
+    <div class="value"><%= @orders.size %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Lifetime value</div>
+    <div class="value"><%= money(@orders.sum(&:total_cents)) %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Default address</div>
+    <div class="value" style="font-size: 0.95rem"><%= @customer.default_address&.to_s || "None on file" %></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h3>Orders</h3></div>
+  <div class="card-body flush table-wrap">
+    <table class="nice">
+      <thead>
+        <tr><th>Order</th><th>Placed</th><th>Status</th><th>Payment</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr class="linky" data-controller="row-link" data-row-link-url-value="<%= sellers_order_path(order) %>" data-action="click->row-link#visit">
+            <td><%= link_to order.number, sellers_order_path(order) %></td>
+            <td><%= order.placed_at.strftime("%b %-d, %Y") %></td>
+            <td><%= order_status_badge(order) %></td>
+            <td><%= order.fully_paid? ? status_badge("paid", { "paid" => "green" }) : status_badge("unpaid", { "unpaid" => "orange" }) %></td>
+            <td class="num"><%= money(order.total_cents) %></td>
+          </tr>
+        <% end %>
+        <% if @orders.empty? %>
+          <tr><td colspan="5" class="dt-empty">No orders yet.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

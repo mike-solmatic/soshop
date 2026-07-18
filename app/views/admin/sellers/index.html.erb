@@ -1,0 +1,38 @@
+<% content_for :title, "Sellers — Admin" %>
+
+<div class="page-head">
+  <div>
+    <h1>Sellers</h1>
+    <div class="sub">All registered stores on the platform</div>
+  </div>
+</div>
+
+<div class="card">
+  <%= react_component "DataTable", {
+    searchPlaceholder: "Search sellers…",
+    emptyMessage: "No sellers registered yet.",
+    columns: [
+      { key: "store", label: "Store", type: "avatar" },
+      { key: "owner", label: "Owner" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "customers", label: "Customers", align: "right" },
+      { key: "orders", label: "Orders", align: "right" },
+      { key: "registered", label: "Registered" }
+    ],
+    rows: @sellers.map { |s|
+      status = s.pending? ? "Pending" : (s.enabled? ? "Active" : "Disabled")
+      {
+        id: s.id,
+        href: admin_seller_path(s),
+        store: s.store_name,
+        owner: "#{s.name} · #{s.email}",
+        status: status,
+        customers: s.customers_count,
+        orders: s.orders_count,
+        registered: s.created_at.strftime("%b %-d, %Y"),
+        registered_sort: s.created_at.to_i,
+        badge_tones: { status: { "Pending" => "orange", "Active" => "green", "Disabled" => "red" }[status] }
+      }
+    }
+  } %>
+</div>

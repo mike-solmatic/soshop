@@ -1,0 +1,58 @@
+<% content_for :title, "My account — #{current_customer.seller.store_name}" %>
+
+<div class="page-head">
+  <div style="display:flex; align-items:center; gap: 0.9rem">
+    <%= avatar_tag(current_customer.name, current_customer.avatar_url, size: 48) %>
+    <div>
+      <h1 class="mb-0">Hi, <%= current_customer.name.split(" ").first %> 👋</h1>
+      <div class="sub">Your account at <%= current_customer.seller.store_name %></div>
+    </div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card accent">
+    <div class="label">Orders</div>
+    <div class="value"><%= @orders_count %></div>
+    <div class="hint"><%= link_to "View my orders", portal_orders_path %></div>
+  </div>
+  <div class="stat-card accent">
+    <div class="label">Addresses</div>
+    <div class="value"><%= @addresses_count %></div>
+    <div class="hint"><%= link_to "Manage addresses", portal_addresses_path %></div>
+  </div>
+  <div class="stat-card accent">
+    <div class="label">Default address</div>
+    <div class="value" style="font-size: 0.95rem">
+      <%= @default_address&.to_s || "Not set yet" %>
+    </div>
+    <div class="hint"><%= link_to "Change", portal_addresses_path %></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h3>Recent orders</h3>
+    <%= link_to "View all", portal_orders_path, class: "text-sm" %>
+  </div>
+  <div class="card-body flush table-wrap">
+    <table class="nice">
+      <thead>
+        <tr><th>Order</th><th>Placed</th><th>Status</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr class="linky" data-controller="row-link" data-row-link-url-value="<%= portal_order_path(order) %>" data-action="click->row-link#visit">
+            <td><%= link_to order.number, portal_order_path(order) %></td>
+            <td><%= order.placed_at.strftime("%b %-d, %Y") %></td>
+            <td><%= order_status_badge(order) %></td>
+            <td class="num"><%= money(order.total_cents) %></td>
+          </tr>
+        <% end %>
+        <% if @orders.empty? %>
+          <tr><td colspan="4" class="dt-empty">You haven't placed any orders yet.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

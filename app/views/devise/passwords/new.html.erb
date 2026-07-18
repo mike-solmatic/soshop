@@ -1,0 +1,24 @@
+<% content_for :title, "Reset password — SoShop" %>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <%= link_to root_path, class: "brand" do %>
+      <span class="brand-mark">S</span> SoShop
+    <% end %>
+    <h1>Forgot your password?</h1>
+    <p class="text-muted text-sm">We'll email you a link to reset it.</p>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
+
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+      </div>
+
+      <%= f.submit "Send reset instructions", class: "btn btn-primary", data: { turbo: false } %>
+    <% end %>
+
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

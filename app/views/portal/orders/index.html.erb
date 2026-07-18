@@ -1,0 +1,32 @@
+<% content_for :title, "My orders — #{current_customer.seller.store_name}" %>
+
+<div class="page-head">
+  <div>
+    <h1>My orders</h1>
+    <div class="sub">Everything you've ordered from <%= current_customer.seller.store_name %></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body flush table-wrap">
+    <table class="nice">
+      <thead>
+        <tr><th>Order</th><th>Placed</th><th>Items</th><th>Status</th><th class="num">Total</th></tr>
+      </thead>
+      <tbody>
+        <% @orders.each do |order| %>
+          <tr class="linky" data-controller="row-link" data-row-link-url-value="<%= portal_order_path(order) %>" data-action="click->row-link#visit">
+            <td><%= link_to order.number, portal_order_path(order) %></td>
+            <td><%= order.placed_at.strftime("%b %-d, %Y") %></td>
+            <td><%= order.order_items.sum(&:quantity) %></td>
+            <td><%= order_status_badge(order) %></td>
+            <td class="num"><%= money(order.total_cents) %></td>
+          </tr>
+        <% end %>
+        <% if @orders.empty? %>
+          <tr><td colspan="5" class="dt-empty">You haven't placed any orders yet.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

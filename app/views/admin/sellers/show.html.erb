@@ -1,0 +1,66 @@
+<% content_for :title, "#{@seller.store_name} — Admin" %>
+
+<div class="page-head">
+  <div>
+    <h1><%= @seller.store_name %> <%= seller_status_badge(@seller) %></h1>
+    <div class="sub">
+      <%= @seller.name %> · <%= @seller.email %> ·
+      registered <%= @seller.created_at.strftime("%B %-d, %Y") %>
+      <% if @seller.approved_at %> · approved <%= @seller.approved_at.strftime("%B %-d, %Y") %><% end %>
+    </div>
+  </div>
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap">
+    <% if @seller.pending? %>
+      <%= button_to "Approve seller", approve_admin_seller_path(@seller), method: :patch, class: "btn btn-primary" %>
+    <% end %>
+    <%= button_to @seller.enabled? ? "Disable seller" : "Enable seller",
+          toggle_enabled_admin_seller_path(@seller), method: :patch,
+          data: { turbo_confirm: @seller.enabled? ? "Disable #{@seller.store_name}? They will lose access immediately." : nil },
+          class: @seller.enabled? ? "btn btn-danger" : "btn btn-primary" %>
+    <%= link_to "← All sellers", admin_sellers_path, class: "btn btn-outline" %>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="label">Storefront</div>
+    <div class="value" style="font-size:1rem"><%= link_to "/s/#{@seller.slug}", storefront_path(@seller.slug) %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Customers</div>
+    <div class="value"><%= @customers.size %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Orders</div>
+    <div class="value"><%= @orders_count %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Revenue</div>
+    <div class="value"><%= money(@revenue_cents) %></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head"><h3>Customers of <%= @seller.store_name %></h3></div>
+  <div class="card-body flush table-wrap">
+    <table class="nice">
+      <thead>
+        <tr><th></th><th>Name</th><th>Email</th><th>Facebook ID</th><th>Joined</th></tr>
+      </thead>
+      <tbody>
+        <% @customers.each do |customer| %>
+          <tr>
+            <td style="width:42px"><%= avatar_tag(customer.name, customer.avatar_url) %></td>
+            <td><strong><%= customer.name %></strong></td>
+            <td><%= customer.email.presence || "—" %></td>
+            <td><code><%= customer.uid %></code></td>
+            <td><%= customer.created_at.strftime("%b %-d, %Y") %></td>
+          </tr>
+        <% end %>
+        <% if @customers.empty? %>
+          <tr><td colspan="5" class="dt-empty">No customers yet.</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

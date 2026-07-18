@@ -1,0 +1,49 @@
+<% content_for :title, "Orders — #{current_seller.store_name}" %>
+
+<div class="page-head">
+  <div>
+    <h1>Orders</h1>
+    <div class="sub">All orders placed in your shop</div>
+  </div>
+  <div style="display:flex; gap:0.4rem; flex-wrap:wrap">
+    <%= link_to "All", sellers_orders_path, class: "btn btn-sm #{params[:status].blank? ? 'btn-primary' : 'btn-outline'}" %>
+    <% Order.statuses.each_key do |status| %>
+      <%= link_to status.humanize, sellers_orders_path(status: status),
+            class: "btn btn-sm #{params[:status] == status ? 'btn-primary' : 'btn-outline'}" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <%= react_component "DataTable", {
+    searchPlaceholder: "Search orders…",
+    emptyMessage: "No orders#{" with status #{params[:status]}" if params[:status].present?} yet.",
+    columns: [
+      { key: "number", label: "Order" },
+      { key: "customer", label: "Customer", type: "avatar" },
+      { key: "placed", label: "Placed" },
+      { key: "status", label: "Status", type: "badge" },
+      { key: "payment", label: "Payment", type: "badge" },
+      { key: "total", label: "Total", type: "money", align: "right" }
+    ],
+    rows: @orders.map { |o|
+      {
+        id: o.id,
+        href: sellers_order_path(o),
+        number: o.number,
+        customer: o.customer.name,
+        avatar_url: o.customer.avatar_url,
+        placed: o.placed_at.strftime("%b %-d, %Y"),
+        placed_sort: o.placed_at.to_i,
+        status: o.status.humanize,
+        payment: o.fully_paid? ? "Paid" : "Unpaid",
+        total: money(o.total_cents),
+        total_sort: o.total_cents,
+        badge_tones: {
+          status: ApplicationHelper::ORDER_STATUS_TONES[o.status],
+          payment: o.fully_paid? ? "green" : "orange"
+        }
+      }
+    }
+  } %>
+</div>

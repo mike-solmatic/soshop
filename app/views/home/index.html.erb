@@ -1,0 +1,47 @@
+<div class="hero">
+  <nav class="public-nav on-gradient">
+    <%= link_to root_path, class: "brand" do %>
+      <span class="brand-mark">S</span> SoShop
+    <% end %>
+    <div class="links">
+      <%= link_to "Seller sign in", new_seller_session_path %>
+      <%= link_to "Admin", new_admin_session_path %>
+      <%= link_to "Start selling", new_seller_registration_path, class: "btn btn-outline" %>
+    </div>
+  </nav>
+  <div class="hero-inner">
+    <h1>The commerce platform built for bag sellers</h1>
+    <p>Launch your own storefront, let customers sign in with Facebook, and manage orders, payments and invoices — all in one beautifully simple dashboard.</p>
+    <%= link_to "Create your store", new_seller_registration_path, class: "btn btn-outline" %>
+    <% if @demo_store %>
+      <%= link_to "Visit a live shop →", storefront_path(@demo_store.slug), class: "btn btn-dark" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="features">
+  <div class="feature-card">
+    <div class="icon">🛍</div>
+    <h3>Your own storefront</h3>
+    <p class="mb-0 text-sm">Every seller gets an isolated, multi-tenant workspace — your customers, orders, payments and invoices are yours alone.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">📦</div>
+    <h3>Orders &amp; payments</h3>
+    <p class="mb-0 text-sm">Track new orders in real time, drill into each one, and see every payment and invoice attached to it.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">👤</div>
+    <h3>Facebook Connect</h3>
+    <p class="mb-0 text-sm">Customers sign in with one tap using Facebook — no passwords, no friction, profile photo included.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">📊</div>
+    <h3>Live dashboards</h3>
+    <p class="mb-0 text-sm">Revenue charts, new customer counts and order trends, powered by React and updated as you sell.</p>
+  </div>
+</div>
+
+<div class="footer">
+  SoShop — a multi-tenant SaaS demo built with Ruby on Rails &amp; React.
+</div>

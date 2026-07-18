@@ -1,0 +1,114 @@
+<% content_for :title, "#{@order.number} — Orders" %>
+
+<div class="page-head">
+  <div>
+    <h1><%= @order.number %> <%= order_status_badge(@order) %></h1>
+    <div class="sub">Placed <%= @order.placed_at.strftime("%B %-d, %Y at %l:%M %p") %></div>
+  </div>
+  <%= link_to "← All orders", sellers_orders_path, class: "btn btn-outline" %>
+</div>
+
+<div class="two-col">
+  <div>
+    <div class="card mt-0">
+      <div class="card-head"><h3>Items</h3></div>
+      <div class="card-body flush table-wrap">
+        <table class="nice">
+          <thead>
+            <tr><th>Product</th><th class="num">Qty</th><th class="num">Unit price</th><th class="num">Total</th></tr>
+          </thead>
+          <tbody>
+            <% @order.order_items.each do |item| %>
+              <tr>
+                <td><%= item.product_name %></td>
+                <td class="num"><%= item.quantity %></td>
+                <td class="num"><%= money(item.unit_price_cents) %></td>
+                <td class="num"><%= money(item.line_total_cents) %></td>
+              </tr>
+            <% end %>
+            <tr>
+              <td colspan="3" class="num text-muted">Subtotal</td>
+              <td class="num"><%= money(@order.subtotal_cents) %></td>
+            </tr>
+            <tr>
+              <td colspan="3" class="num text-muted">Shipping</td>
+              <td class="num"><%= money(@order.shipping_cents) %></td>
+            </tr>
+            <tr>
+              <td colspan="3" class="num"><strong>Total</strong></td>
+              <td class="num"><strong><%= money(@order.total_cents) %></strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h3>Payments</h3>
+        <span class="text-sm <%= @order.fully_paid? ? '' : 'text-muted' %>">
+          <%= money(@order.paid_amount_cents) %> of <%= money(@order.total_cents) %> paid
+        </span>
+      </div>
+      <div class="card-body flush table-wrap">
+        <table class="nice">
+          <thead>
+            <tr><th>Reference</th><th>Method</th><th>Status</th><th>Date</th><th class="num">Amount</th></tr>
+          </thead>
+          <tbody>
+            <% @payments.each do |payment| %>
+              <tr>
+                <td><code><%= payment.reference %></code></td>
+                <td><%= payment.method.humanize %></td>
+                <td><%= payment_status_badge(payment) %></td>
+                <td><%= payment.paid_at&.strftime("%b %-d, %Y") || "—" %></td>
+                <td class="num"><%= money(payment.amount_cents) %></td>
+              </tr>
+            <% end %>
+            <% if @payments.empty? %>
+              <tr><td colspan="5" class="dt-empty">No payments recorded for this order.</td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="card mt-0">
+      <div class="card-head"><h3>Customer</h3></div>
+      <div class="card-body">
+        <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom: 0.8rem">
+          <%= avatar_tag(@order.customer.name, @order.customer.avatar_url, size: 38) %>
+          <div>
+            <strong><%= link_to @order.customer.name, sellers_customer_path(@order.customer) %></strong><br>
+            <span class="text-muted text-sm"><%= @order.customer.email %></span>
+          </div>
+        </div>
+        <% if @order.shipping_address %>
+          <dl class="def-list">
+            <dt>Ship to</dt>
+            <dd><%= @order.shipping_address.recipient %><br><%= @order.shipping_address %></dd>
+          </dl>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>Invoice</h3></div>
+      <div class="card-body">
+        <% if @order.invoice %>
+          <dl class="def-list">
+            <dt>Number</dt><dd><%= @order.invoice.number %></dd>
+            <dt>Status</dt><dd><%= invoice_status_badge(@order.invoice) %></dd>
+            <dt>Amount</dt><dd><%= money(@order.invoice.amount_cents) %></dd>
+            <dt>Issued</dt><dd><%= @order.invoice.issued_on&.strftime("%b %-d, %Y") || "—" %></dd>
+            <dt>Due</dt><dd><%= @order.invoice.due_on&.strftime("%b %-d, %Y") || "—" %></dd>
+          </dl>
+        <% else %>
+          <p class="text-muted mb-0">No invoice for this order yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

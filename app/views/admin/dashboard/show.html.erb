@@ -1,0 +1,87 @@
+<% content_for :title, "Admin dashboard — SoShop" %>
+
+<div class="page-head">
+  <div>
+    <h1>Platform overview</h1>
+    <div class="sub">Sellers, customers and order volume across all tenants</div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card accent">
+    <div class="label">Active sellers</div>
+    <div class="value"><%= @active_sellers_count %></div>
+    <div class="hint">approved &amp; enabled</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="label">Pending approval</div>
+    <div class="value"><%= @pending_sellers_count %></div>
+    <div class="hint">awaiting review</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="label">Customers</div>
+    <div class="value"><%= @total_customers %></div>
+    <div class="hint">across all sellers</div>
+  </div>
+  <div class="stat-card accent">
+    <div class="label">Orders</div>
+    <div class="value"><%= @total_orders %></div>
+    <div class="hint">across all sellers</div>
+  </div>
+</div>
+
+<% if @pending_sellers.any? %>
+  <div class="card">
+    <div class="card-head"><h3>⏳ Sellers waiting for approval</h3></div>
+    <div class="card-body flush table-wrap">
+      <table class="nice">
+        <thead>
+          <tr><th>Store</th><th>Owner</th><th>Registered</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% @pending_sellers.each do |seller| %>
+            <tr>
+              <td><%= link_to seller.store_name, admin_seller_path(seller) %></td>
+              <td><%= seller.name %> · <span class="text-muted"><%= seller.email %></span></td>
+              <td><%= time_ago_in_words(seller.created_at) %> ago</td>
+              <td class="num">
+                <%= button_to "Approve", approve_admin_seller_path(seller), method: :patch, class: "btn btn-sm btn-primary" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-head"><h3>Platform revenue — last 14 days</h3></div>
+  <div class="card-body">
+    <%= react_component "RevenueChart", { data: @chart_data } %>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <h3>Latest sellers</h3>
+    <%= link_to "View all", admin_sellers_path, class: "text-sm" %>
+  </div>
+  <div class="card-body flush table-wrap">
+    <table class="nice">
+      <thead>
+        <tr><th>Store</th><th>Owner</th><th>Status</th><th>Registered</th></tr>
+      </thead>
+      <tbody>
+        <% @latest_sellers.each do |seller| %>
+          <tr class="linky" data-controller="row-link" data-row-link-url-value="<%= admin_seller_path(seller) %>" data-action="click->row-link#visit">
+            <td><%= link_to seller.store_name, admin_seller_path(seller) %></td>
+            <td><%= seller.name %></td>
+            <td><%= seller_status_badge(seller) %></td>
+            <td><%= seller.created_at.strftime("%b %-d, %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

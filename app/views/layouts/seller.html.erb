@@ -1,0 +1,23 @@
+<% content_for :sidebar do %>
+  <span class="area-chip seller">SELLER</span>
+  <div class="sidebar-section">Manage</div>
+  <%= side_link "Dashboard", sellers_dashboard_path, :dashboard, active: current_page?(sellers_dashboard_path) %>
+  <%= side_link "Orders", sellers_orders_path, :orders, active: request.path.start_with?("/seller/orders") %>
+  <%= side_link "Customers", sellers_customers_path, :customers, active: request.path.start_with?("/seller/customers") %>
+  <div class="sidebar-section">Store</div>
+  <%= side_link "View storefront", storefront_path(current_seller.slug), :shop, active: false %>
+  <div class="spacer"></div>
+<% end %>
+
+<% content_for :topbar do %>
+  <div class="topbar">
+    <strong><%= current_seller.store_name %></strong>
+    <div class="who">
+      <%= avatar_tag(current_seller.name, nil) %>
+      <span><%= current_seller.name %></span>
+      <%= button_to "Sign out", destroy_seller_session_path, method: :delete, class: "btn btn-outline btn-sm" %>
+    </div>
+  </div>
+<% end %>
+
+<%= render template: "layouts/application" %>

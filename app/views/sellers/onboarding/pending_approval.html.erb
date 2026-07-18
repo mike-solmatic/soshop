@@ -1,0 +1,24 @@
+<% content_for :title, "Pending approval — SoShop" %>
+
+<div class="auth-wrap">
+  <div class="auth-card" style="text-align:center">
+    <div style="font-size: 2.6rem; margin-bottom: 0.6rem">
+      <%= current_seller.enabled? ? "⏳" : "🚫" %>
+    </div>
+    <% if current_seller.enabled? %>
+      <h1>Your store is almost ready</h1>
+      <p class="text-muted">
+        Thanks for registering <strong><%= current_seller.store_name %></strong>!
+        An administrator is reviewing your account. You'll get full access to your
+        dashboard as soon as it's approved.
+      </p>
+    <% else %>
+      <h1>Your store is disabled</h1>
+      <p class="text-muted">
+        <strong><%= current_seller.store_name %></strong> has been disabled by an administrator.
+        Contact support if you believe this is a mistake.
+      </p>
+    <% end %>
+    <%= button_to "Sign out", destroy_seller_session_path, method: :delete, class: "btn btn-outline" %>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+# Litestream continuously replicates the production SQLite database to S3.
+# Runs as a Puma plugin (see config/puma.rb) only when
+# LITESTREAM_REPLICA_BUCKET is set.
+#
+# Restore after a disaster with:
+#   bin/rails litestream:restore -- --database=storage/production.sqlite3
+
+dbs:
+  - path: storage/production.sqlite3
+    replicas:
+      - type: s3
+        bucket: $LITESTREAM_REPLICA_BUCKET
+        path: production.sqlite3
+        region: $LITESTREAM_REPLICA_REGION
+        access-key-id: $LITESTREAM_ACCESS_KEY_ID
+        secret-access-key: $LITESTREAM_SECRET_ACCESS_KEY

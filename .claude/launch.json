@@ -1,0 +1,27 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "soshop",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd /Users/mike/Documents/Jasperbyte/soshop && exec bin/dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "jasperbyte-wp",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "--yes",
+        "@wp-playground/cli@latest",
+        "server",
+        "--port=9400",
+        "--blueprint=/Users/mike/Documents/Jasperbyte/jasperbyte-wp/blueprint.json",
+        "--mount-before-install=/Users/mike/Documents/Jasperbyte/jasperbyte-wp/wp-content:/wordpress/wp-content"
+      ],
+      "port": 9400
+    }
+  ]
+}

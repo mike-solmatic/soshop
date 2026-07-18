@@ -1,0 +1,47 @@
+<% content_for :title, "Addresses — #{current_customer.seller.store_name}" %>
+
+<div class="page-head">
+  <div>
+    <h1>My addresses</h1>
+    <div class="sub">Delivery addresses for your orders</div>
+  </div>
+  <%= link_to "+ Add address", new_portal_address_path, class: "btn btn-primary" %>
+</div>
+
+<div class="address-grid">
+  <% @addresses.each do |address| %>
+    <div class="card address-card mt-0">
+      <div class="card-body">
+        <% if address.default? %>
+          <span class="badge badge-green default-pill">Default</span>
+        <% end %>
+        <h3><%= address.label %></h3>
+        <strong><%= address.recipient %></strong><br>
+        <span class="text-sm">
+          <%= address.line1 %><br>
+          <% if address.line2.present? %><%= address.line2 %><br><% end %>
+          <%= address.city %><%= ", #{address.state}" if address.state.present? %> <%= address.postal_code %><br>
+          <%= address.country %>
+          <% if address.phone.present? %><br>☎ <%= address.phone %><% end %>
+        </span>
+        <div class="actions">
+          <% unless address.default? %>
+            <%= button_to "Set as default", make_default_portal_address_path(address), method: :patch, class: "btn btn-sm btn-outline" %>
+          <% end %>
+          <%= link_to "Edit", edit_portal_address_path(address), class: "btn btn-sm btn-outline" %>
+          <%= button_to "Remove", portal_address_path(address), method: :delete,
+                data: { turbo_confirm: "Remove this address?" }, class: "btn btn-sm btn-danger" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @addresses.empty? %>
+  <div class="card">
+    <div class="empty-state">
+      <div class="big">📍</div>
+      No addresses yet. <%= link_to "Add your first address", new_portal_address_path %> so we know where to ship.
+    </div>
+  </div>
+<% end %>
