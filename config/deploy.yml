@@ -12,7 +12,7 @@ servers:
 
 # kamal-proxy terminates TLS with automatic Let's Encrypt certificates.
 proxy:
-  ssl: true
+  ssl: false
   hosts:
     - elitelouise.com
     - www.elitelouise.com
